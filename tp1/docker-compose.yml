@@ -1,0 +1,28 @@
+services:
+  service-b:
+    build:
+      context: ./service_B
+      dockerfile: Dockerfile
+    container_name: service-b
+    expose:
+      - "9090"
+    networks:
+      - app-net
+
+  service-a:
+    build:
+      context: ./service_A
+      dockerfile: Dockerfile
+    container_name: service-a
+    ports:
+      - "9090:9090"
+    environment:
+      - SERVICE_B_URL=http://service-b:9090
+    depends_on:
+      - service-b
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
